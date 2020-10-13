@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   Text, 
   View,
@@ -10,8 +10,14 @@ import {f, database, auth, storage} from '../config/config';
 import { LinearGradient } from 'expo-linear-gradient';
 import Icon from 'react-native-vector-icons/Entypo';
 import Icon2 from 'react-native-vector-icons/AntDesign';
+import Icon3 from 'react-native-vector-icons/Feather';
+
+
+const [visibleStatusBar, setVisibleStatusBar] = useState(false);
 
 class Login extends React.Component {
+
+  
   constructor(props)
   {
     super(props)
@@ -40,9 +46,14 @@ class Login extends React.Component {
 
     }
 
-    registerUser = () => {
-      //code fore registration of user.
-    }
+    registerUser = (email, password) => {
+      //code for registration of user.
+       /*  console.log(email,password);
+        auth.createUserWithEmailAndPassword(email,password)
+        .then((userObj) => console.log(email, password, userObj))
+        .catch((error) => console.log('error loggin in', error)); */
+      
+    } 
 
     userLogin = () => {
       //code for logging in of registered user.
@@ -80,6 +91,10 @@ class Login extends React.Component {
     } 
   }
 
+  changeVisibilityStatusBar = () => {
+    setVisibleStatusBar(!visibleStatusBar);
+  };
+
   
   loginWithGoogle = () => {
     //code for loggin in with google 
@@ -89,75 +104,60 @@ class Login extends React.Component {
     return (
   
     <View style={styles.container}>
-      <Text style={styles.heading}>Beat On</Text>
-      <Image style={styles.image}
-    source={require('../assets/BeatOn.jpeg')}
-    />
-    
-    <View style={styles.fields}> 
-        <View style={styles.inputContainer}>
-          <Image style={styles.inputIcon} source={{uri: "https://img.icons8.com/doodle/48/000000/email--v1.png"}}/>
-          <TextInput style={styles.inputs}
-              placeholder="Email"
-              keyboardType="email-address"
-              underlineColorAndroid='transparent' //configure correctly. some sort of clerical error here. IN TEXT INPUT
-              onChangeText={(text) => this.setState({email: text})}
-              value={this.state.email}
-          />
-        </View>
+      <View style={{marginBottom: '10%'}}>
+        <Image style={styles.image}
+          source={{uri: "https://img.icons8.com/ios-glyphs/30/000000/user-male.png"}}
+        />
+          <Text style={styles.topHeading}>Create Account On</Text>
+      </View>
+      <View style={{marginTop: '15%', marginBottom: '15%'}}>
+        <Text style={styles.heading}>BeatOn</Text>
+        <Text style={styles.byLine}>Desh Ka Naya Masti Platform</Text>
+      </View>
+      
+      <View>
+        <TouchableOpacity 
+                  style={styles.facebookButton}
+                  onPress={this.loginWithFacebook}
+                  >
+              <View style={styles.socialButtonContent}>
+                <Icon  name="facebook" 
+                  color='white' 
+                  size={18}
+                  />
+                  <Text style={styles.loginTextFacebook}>Continue with facebook</Text>
+              </View>
+          
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+                style={styles.googleButton}
+                //onPress={this.loginUser(this.state.email, this.state.password)}
+                >
+            <View style={styles.socialButtonContent2}>
+              <Icon2 style={{marginRight: '2%'}} name="google" 
+                color='white' 
+                size={18} 
+                />
+              <Text style={styles.loginTextGoogle}>Continue with Google</Text>
+            </View>
+          </TouchableOpacity>
+
+        <TouchableOpacity 
+              style={styles.loginButton}
+              onPress={this.registerUser(this.state.email, this.state.password)}
+              >
+          <View style={styles.socialButtonContent2}>
+          <Icon3 style={{marginRight: '2%'}} name="smartphone" 
+                color='white' 
+                size={18} 
+                />
+              <Text style={styles.loginTextFacebook}>Continue with Phone</Text>
+          </View>
         
-        <View style={styles.inputContainer}>
-          <Image style={styles.inputIcon} source={{uri: "https://img.icons8.com/doodle/48/000000/password.png"}}/>
-          <TextInput style={styles.inputs}
-              placeholder="Password"
-              secureTextEntry={true}
-              underlineColorAndroid='transparent'
-              onChangeText={(text) => this.setState({password: text})}
-              value={this.state.password}/>
-        </View>
+        </TouchableOpacity>
+
      </View>
-
-     <TouchableOpacity 
-          style={styles.loginButton}
-          onPress={this.registerUser(this.state.email, this.state.password)}
-          >
-      <View style={styles.socialButtonContent}>
-           <Text style={styles.loginTextFacebook}>Login</Text>
-      </View>
-     
-     </TouchableOpacity>
-
-      <View style={styles.division2}>
-        <Text style = {styles.division}>OR</Text>
-      </View>
-
-     <TouchableOpacity 
-          style={styles.facebookButton}
-          onPress={this.loginWithFacebook}
-          >
-      <View style={styles.socialButtonContent}>
-      <Icon  name="facebook" 
-      color='white' 
-      size={25}
-      />
-           <Text style={styles.loginTextFacebook}>Login with facebook</Text>
-      </View>
-     
-     </TouchableOpacity>
-
-     <TouchableOpacity 
-          style={styles.googleButton}
-          //onPress={this.loginUser(this.state.email, this.state.password)}
-          >
-      <View style={styles.socialButtonContent}>
-      <Icon2 name="google" 
-      color='white' 
-      size={25}
-      />
-           <Text style={styles.loginTextGoogle}>Login with Google</Text>
-      </View>
-     
-     </TouchableOpacity>
      <View style = {styles.impText}>
         <Text style={styles.terms}>By signing in, you agree with our <Text style={styles.underline1}>Terms and Conditions</Text> and <Text style={styles.underline1}>Privacy Policy</Text>
         </Text>
@@ -175,26 +175,31 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#fff',
-    flexDirection: 'column'
+    backgroundColor: 'black',
+    flexDirection: 'column',
+    //marginBottom: '5%'
   },
-  fields: {
-    marginTop: '20%'
+  topHeading: {
+    color: 'grey',
+    fontSize: 30,
+    //marginBottom: '15%',
+    marginTop: '-5%'
   },
   impText: {
-    marginTop: '5%',
+    marginTop: '17%',
     marginLeft: '12%',
-    marginRight: '5%'
+    marginRight: '5%',
+    marginBottom: '-60%'
    
+  },
+  byLine: {
+    color: 'grey',
+    marginLeft: '3%'
   },
   division: {
     fontSize: 30,
     fontFamily: 'text2',
 
-  },
-  division2: {
-    //marginTop: '10%',
-    marginBottom: '10%'
   },
   terms: {
     color: 'grey',
@@ -202,23 +207,27 @@ const styles = StyleSheet.create({
   },
   underline1: {
     textDecorationLine: 'underline',
+    color: '#FDD451'
   },  
   heading: {
     borderRadius: 8,
     marginLeft: '3%',
-    fontSize: 30,
-    fontFamily: 'text1', 
-    color: 'purple',
+    fontSize: 53,
+    fontFamily: 'text2', 
+    color: 'white',
+    marginTop: '-10%'
     //marginTop: '30%' 
   },
   
   image: {
     width: 50,
     height: 50,
-    borderRadius: 8,
+    borderRadius: 25,
     //marginTop: '35%',
-    marginLeft: '7%',
-    //marginBottom: '15%'
+    backgroundColor: 'grey',
+    marginBottom: '10%',
+    marginLeft: '28%',
+    marginTop: '-30%'
 },
 facebookButton: {
   height:45,
@@ -226,8 +235,8 @@ facebookButton: {
   flexDirection: 'row',
   justifyContent: 'center',
   alignItems: 'center',
-  borderRadius:30,
-  backgroundColor: "#4267B2",
+  borderRadius:15,
+  backgroundColor: "#0D4F8B",
   //marginTop: '80%',
   marginLeft: '10%', 
   marginRight: '10%',
@@ -235,46 +244,61 @@ facebookButton: {
   
 },
 loginButton: {
-    height:45,
-    width: 300,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius:30,
-    backgroundColor: "pink",
-    marginTop: '5%',
-    marginLeft: '10%', 
-    marginRight: '10%',
-    marginBottom: '5%'
+  height:45,
+  width: 300,
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignItems: 'center',
+  borderRadius:15,
+  backgroundColor: "#32CD32",
+  //marginTop: '80%',
+  marginLeft: '10%', 
+  marginRight: '10%',
+  marginBottom: '5%'
+  
 },
+
 googleButton: {
   height:45,
   width: 300,
   flexDirection: 'row',
   justifyContent: 'center',
   alignItems: 'center',
-  borderRadius:30,
-  backgroundColor: "#F4B400",
+  borderRadius:15,
+  backgroundColor: "#4981CE",
+  //marginTop: '80%',
+  marginLeft: '10%', 
+  marginRight: '10%',
+  marginBottom: '5%'
   
 },
 socialButtonContent:{
   flexDirection: 'row',
   justifyContent: 'center',
   alignItems: 'center', 
-  marginTop: '2%'
+  marginTop: '2%',
+  marginLeft: '-4%'
+},
+socialButtonContent2: {
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignItems: 'center', 
+  marginTop: '2%',
+  marginLeft: '-8%'
 },
 loginTextFacebook: {
   color: 'white',
-  marginLeft: '5%',
-  fontSize: 17,
+  marginLeft: '10%',
+  fontSize: 15,
   fontFamily: 'text'
   
 },
 loginTextGoogle: {
   color: 'white',
-  marginLeft: '12%',
-  fontSize: 17,
+  marginLeft: '8%',
+  fontSize: 15,
   fontFamily: 'text'
+  
   
 },
 inputContainer: {
